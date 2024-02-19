@@ -706,7 +706,7 @@ func (s *Strategy) processIDToken(w http.ResponseWriter, r *http.Request, provid
 	return claims, nil
 }
 
-func (s *Strategy) linkCredentials(ctx context.Context, i *identity.Identity, idToken, accessToken, refreshToken, provider, subject, organization string) error {
+func (s *Strategy) linkCredentials(ctx context.Context, i *identity.Identity, idToken, accessToken, refreshToken, currentIdToken, currentAccessToken, currentRefreshToken, provider, subject, organization string) error {
 	if err := s.d.PrivilegedIdentityPool().HydrateIdentityAssociations(ctx, i, identity.ExpandCredentials); err != nil {
 		return err
 	}
@@ -726,6 +726,9 @@ func (s *Strategy) linkCredentials(ctx context.Context, i *identity.Identity, id
 			InitialAccessToken:  accessToken,
 			InitialRefreshToken: refreshToken,
 			InitialIDToken:      idToken,
+			CurrentAccessToken:  currentAccessToken,
+			CurrentRefreshToken: currentRefreshToken,
+			CurrentIDToken:      currentIdToken,
 			Organization:        organization,
 		})
 

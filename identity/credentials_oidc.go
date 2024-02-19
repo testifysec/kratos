@@ -29,6 +29,9 @@ type CredentialsOIDCProvider struct {
 	InitialIDToken      string `json:"initial_id_token"`
 	InitialAccessToken  string `json:"initial_access_token"`
 	InitialRefreshToken string `json:"initial_refresh_token"`
+	CurrentIDToken      string `json:"current_id_token"`
+	CurrentAccessToken  string `json:"current_access_token"`
+	CurrentRefreshToken string `json:"current_refresh_token"`
 	Organization        string `json:"organization,omitempty"`
 }
 
@@ -51,6 +54,9 @@ func NewCredentialsOIDC(idToken, accessToken, refreshToken, provider, subject, o
 				InitialIDToken:      idToken,
 				InitialAccessToken:  accessToken,
 				InitialRefreshToken: refreshToken,
+				CurrentIDToken:      idToken,
+				CurrentAccessToken:  accessToken,
+				CurrentRefreshToken: refreshToken,
 				Organization:        organization,
 			}},
 	}); err != nil {
@@ -77,4 +83,13 @@ func (c *CredentialsOIDC) Organization() string {
 	}
 
 	return ""
+}
+
+func (c *CredentialsOIDC) GetProvider(provider, subject string) (k int, found bool) {
+	for k, p := range c.Providers {
+		if p.Subject == subject && p.Provider == provider {
+			return k, true
+		}
+	}
+	return -1, false
 }
